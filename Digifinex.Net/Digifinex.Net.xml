@@ -1,0 +1,1488 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Digifinex.Net</name>
+    </assembly>
+    <members>
+        <member name="T:Digifinex.Net.Clients.DigifinexRestClient">
+            <inheritdoc cref="T:Digifinex.Net.Interfaces.Clients.IDigifinexRestClient" />
+        </member>
+        <member name="P:Digifinex.Net.Clients.DigifinexRestClient.SpotApi">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexRestClient.#ctor(System.Action{Digifinex.Net.Objects.Options.DigifinexRestOptions})">
+            <summary>
+            Create a new instance of the DigifinexRestClient using provided options
+            </summary>
+            <param name="optionsDelegate">Option configuration delegate</param>
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexRestClient.#ctor(System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Options.IOptions{Digifinex.Net.Objects.Options.DigifinexRestOptions})">
+            <summary>
+            Create a new instance of the DigifinexRestClient
+            </summary>
+            <param name="options">Option configuration</param>
+            <param name="loggerFactory">The logger factory</param>
+            <param name="httpClient">Http client for this client</param>
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexRestClient.SetDefaultOptions(System.Action{Digifinex.Net.Objects.Options.DigifinexRestOptions})">
+            <summary>
+            Set the default options to be used when creating new clients
+            </summary>
+            <param name="optionsDelegate">Option configuration delegate</param>
+        </member>
+        <member name="T:Digifinex.Net.Clients.DigifinexSocketClient">
+            <inheritdoc cref="T:Digifinex.Net.Interfaces.Clients.IDigifinexSocketClient" />
+        </member>
+        <member name="P:Digifinex.Net.Clients.DigifinexSocketClient.SpotApi">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexSocketClient.#ctor(System.Action{Digifinex.Net.Objects.Options.DigifinexSocketOptions})">
+            <summary>
+            Create a new instance of the DigifinexSocketClient
+            </summary>
+            <param name="optionsDelegate">Option configuration delegate</param>
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexSocketClient.#ctor(Microsoft.Extensions.Options.IOptions{Digifinex.Net.Objects.Options.DigifinexSocketOptions},Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create a new instance of the DigifinexSocketClient
+            </summary>
+            <param name="loggerFactory">The logger factory</param>
+            <param name="options">Option configuration</param>
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexSocketClient.SetApiCredentials(Digifinex.Net.DigifinexCredentials)">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexSocketClient.SetDefaultOptions(System.Action{Digifinex.Net.Objects.Options.DigifinexSocketOptions})">
+            <summary>
+            Set the default options to be used when creating new clients
+            </summary>
+            <param name="optionsDelegate">Option configuration delegate</param>
+        </member>
+        <member name="T:Digifinex.Net.Clients.DigifinexUserClientProvider">
+            <inheritdoc />
+        </member>
+        <member name="P:Digifinex.Net.Clients.DigifinexUserClientProvider.ExchangeName">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexUserClientProvider.#ctor(System.Action{Digifinex.Net.Objects.Options.DigifinexOptions})">
+            <summary>
+            ctor
+            </summary>
+            <param name="optionsDelegate">Options to use for created clients</param>
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexUserClientProvider.#ctor(System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Options.IOptions{Digifinex.Net.Objects.Options.DigifinexRestOptions},Microsoft.Extensions.Options.IOptions{Digifinex.Net.Objects.Options.DigifinexSocketOptions})">
+            <summary>
+            ctor
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexUserClientProvider.InitializeUserClient(System.String,Digifinex.Net.DigifinexCredentials,Digifinex.Net.DigifinexEnvironment)">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexUserClientProvider.ClearUserClients(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexUserClientProvider.GetRestClient(System.String,Digifinex.Net.DigifinexCredentials,Digifinex.Net.DigifinexEnvironment)">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.DigifinexUserClientProvider.GetSocketClient(System.String,Digifinex.Net.DigifinexCredentials,Digifinex.Net.DigifinexEnvironment)">
+            <inheritdoc />
+        </member>
+        <member name="T:Digifinex.Net.Clients.MessageHandlers.DigifinexRestMessageHandler">
+            <summary>
+            REST message handler for Digifinex. Digifinex mixes two success conventions across
+            endpoints: most return <c>"code":0</c>, while currency/deposit/withdraw endpoints return
+            <c>"code":200</c>. Any other numeric value is treated as an error and the
+            <c>msg</c>/<c>message</c> field (if present) is surfaced as the human-readable reason.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Clients.MessageHandlers.DigifinexSocketMessageHandler">
+            <summary>
+            Routes incoming Digifinex websocket messages to the right query/subscription. Subscribe
+            and unsubscribe responses are correlated by the echoed <c>id</c> field; live data events
+            (which omit <c>id</c>) are routed by their <c>method</c> identifier (<c>trades.update</c>,
+            <c>ticker.update</c>, ...).
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApi">
+            <inheritdoc cref="T:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApi" />
+        </member>
+        <member name="P:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApi.ClientOptions">
+            <inheritdoc />
+        </member>
+        <member name="P:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApi.ExchangeName">
+            <inheritdoc />
+        </member>
+        <member name="P:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApi.ExchangeData">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApi.FormatSymbol(System.String,System.String,CryptoExchange.Net.SharedApis.TradingMode,System.Nullable{System.DateTime})">
+            <inheritdoc />
+        </member>
+        <member name="T:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApiExchangeData">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApiExchangeData.GetServerTimeAsync(System.Threading.CancellationToken)">
+            <summary>
+            <a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
+            </summary>
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApiExchangeData.GetMarketsAsync(System.Threading.CancellationToken)">
+            <summary>
+            <a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
+            </summary>
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApiExchangeData.GetSymbolsAsync(System.Threading.CancellationToken)">
+            <summary>
+            <a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
+            </summary>
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApiExchangeData.GetCurrenciesAsync(System.Threading.CancellationToken)">
+            <summary>
+            <a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
+            </summary>
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexRestClientSpotApiExchangeData.GetTickersAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            <a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
+            </summary>
+            <inheritdoc />
+        </member>
+        <member name="T:Digifinex.Net.Clients.SpotApi.DigifinexSocketClientSpotApi">
+            <inheritdoc cref="T:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexSocketClientSpotApi" />
+        </member>
+        <member name="P:Digifinex.Net.Clients.SpotApi.DigifinexSocketClientSpotApi.ClientOptions">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexSocketClientSpotApi.#ctor(Microsoft.Extensions.Logging.ILogger,Digifinex.Net.Objects.Options.DigifinexSocketOptions)">
+            <summary>
+            Create a new instance of DigifinexSocketClientSpotApi
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexSocketClientSpotApi.PreprocessStreamMessage(CryptoExchange.Net.Sockets.Default.SocketConnection,System.Net.WebSockets.WebSocketMessageType,System.ReadOnlySpan{System.Byte})">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexSocketClientSpotApi.SubscribeToTradeUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdateMessage}},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexSocketClientSpotApi.SubscribeToTradeUpdatesAsync(System.String[],System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdateMessage}},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexSocketClientSpotApi.SubscribeToTickerUpdatesAsync(System.String[],System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateEnvelope}},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Digifinex.Net.Clients.SpotApi.DigifinexSocketClientSpotApi.SubscribeToAllTickerUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateEnvelope}},System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.Boolean">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.Decimal">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.NullableDecimal">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.Double">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.AssetTransferStatus">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.OrderSide">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.SymbolStatus">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexCurrenciesResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexCurrency">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexCurrencyArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexMarket">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexMarketArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexMarketsResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexServerTime">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexSymbol">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexSymbolArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexSymbolsResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTicker">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTickerArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTickerResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexPingResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexSocketError">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexSocketRequest">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexSocketResult">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexSubscriptionResponse">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTickerUpdate">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTickerUpdateArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTickerUpdateEnvelope">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTickerUpdateMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTradeEntry">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTradeEntryArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTradeUpdate">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DigifinexTradeUpdateMessage">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.IDictionaryStringObject">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.DateTime">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.Int32">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.Int64">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.NullableInt64">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.Object">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.String">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.StringArray">
+            <summary>
+            Defines the source generated JSON serialization contract metadata for a given type.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.Default">
+            <summary>
+            The default <see cref="T:System.Text.Json.Serialization.JsonSerializerContext"/> associated with a default <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Converters.DigifinexSourceGenerationContext.GeneratedSerializerOptions">
+            <summary>
+            The source-generated options associated with this context.
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Converters.DigifinexSourceGenerationContext.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:Digifinex.Net.Converters.DigifinexSourceGenerationContext.#ctor(System.Text.Json.JsonSerializerOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Digifinex.Net.Converters.DigifinexSourceGenerationContext.GetTypeInfo(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Digifinex.Net.Converters.DigifinexTickerUpdateConverter">
+            <summary>
+            Reads the <c>params</c> array of a <c>ticker.update</c> / <c>all_ticker.update</c> push
+            message and projects it onto a <see cref="T:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateMessage"/>. Wire shape is
+            an array containing a single nested array of ticker objects:
+            <c>[[{ticker}, {ticker}, ...]]</c>.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Converters.DigifinexTradeUpdateConverter">
+            <summary>
+            Reads the heterogeneous <c>params</c> array of a <c>trades.update</c> push message and
+            projects it onto a <see cref="T:Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdate"/>. Wire shape:
+            <c>[clean, [trades], "BTC_USDT"]</c>.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.DigifinexAuthenticationProvider">
+            <summary>
+            HMAC-SHA256 authentication for the Digifinex REST API.
+            <para>
+            The signing input is the URL-encoded ASCII-sorted parameter string. For GET requests this
+            is the query string; for POST it is the form-encoded body. When both are present the docs
+            require <c>query &amp; body</c>, query first. The HMAC-SHA256 signature is rendered as
+            lowercase hex and submitted alongside <c>ACCESS-KEY</c> + <c>ACCESS-TIMESTAMP</c> headers.
+            See <see href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />.
+            </para>
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.DigifinexAuthenticationProvider.Sign(System.String)">
+            <summary>
+            Compute the HMAC-SHA256 signature for the given input using the configured API secret.
+            Used by the websocket authentication flow.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.DigifinexCredentials">
+            <summary>
+            Digifinex API credentials
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.DigifinexCredentials.#ctor">
+            <summary>
+            Create new credentials
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.DigifinexCredentials.#ctor(CryptoExchange.Net.Authentication.HMACCredential)">
+            <summary>
+            Create new credentials providing HMAC credentials
+            </summary>
+            <param name="credential">HMAC Credentials</param>
+        </member>
+        <member name="M:Digifinex.Net.DigifinexCredentials.#ctor(System.String,System.String)">
+            <summary>
+            Create new credentials providing credentials in HMAC format
+            </summary>
+            <param name="key">API key</param>
+            <param name="secret">API secret</param>
+        </member>
+        <member name="M:Digifinex.Net.DigifinexCredentials.WithHMAC(System.String,System.String)">
+            <summary>
+            Specify the HMAC credentials
+            </summary>
+            <param name="key">API key</param>
+            <param name="secret">API secret</param>
+        </member>
+        <member name="M:Digifinex.Net.DigifinexCredentials.Copy">
+            <inheritdoc />
+        </member>
+        <member name="T:Digifinex.Net.DigifinexEnvironment">
+            <summary>
+            Digifinex environments
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexEnvironment.RestBaseAddress">
+            <summary>
+            Rest client address
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexEnvironment.SocketBaseAddress">
+            <summary>
+            Spot Socket API address (<c>wss://openapi.digifinex.com/ws/v1/</c>)
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.DigifinexEnvironment.#ctor">
+            <summary>
+            ctor for DI, use <see cref="M:Digifinex.Net.DigifinexEnvironment.CreateCustom(System.String,System.String,System.String)"/> for creating a custom environment
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.DigifinexEnvironment.GetEnvironmentByName(System.String)">
+            <summary>
+            Get the Digifinex environment by name
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexEnvironment.All">
+            <summary>
+            Available environment names
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexEnvironment.Live">
+            <summary>
+            Live environment
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.DigifinexEnvironment.CreateCustom(System.String,System.String,System.String)">
+            <summary>
+            Create a custom environment
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.DigifinexErrors">
+            <summary>
+            Digifinex error code mappings.
+            <see href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.DigifinexExchange">
+            <summary>
+            Digifinex exchange information and configuration
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexExchange.Metadata">
+            <summary>
+            Platform metadata
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexExchange.ExchangeName">
+            <summary>
+            Exchange name
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexExchange.DisplayName">
+            <summary>
+            Display name
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexExchange.ImageUrl">
+            <summary>
+            Url to exchange image
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexExchange.Url">
+            <summary>
+            Url to the main website
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexExchange.ApiDocsUrl">
+            <summary>
+            Urls to the API documentation
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexExchange.Type">
+            <summary>
+            Type of exchange
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexExchange.AssetAliases">
+            <summary>
+            Aliases for Digifinex assets
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.DigifinexExchange.FormatSymbol(System.String,System.String,CryptoExchange.Net.SharedApis.TradingMode,System.Nullable{System.DateTime})">
+            <summary>
+            Format a base and quote asset to a Digifinex recognized symbol (<c>base_quote</c>, lowercase
+            for <c>/v3/markets</c> and <c>/v3/ticker</c>; uppercase for <c>/v3/spot/symbols</c> and the
+            websocket channels - the websocket symbol form is used here as the canonical token).
+            </summary>
+            <param name="baseAsset">Base asset</param>
+            <param name="quoteAsset">Quote asset</param>
+            <param name="tradingMode">Trading mode</param>
+            <param name="deliverTime">Delivery time for delivery futures</param>
+            <returns></returns>
+        </member>
+        <member name="P:Digifinex.Net.DigifinexExchange.RateLimiter">
+            <summary>
+            Rate limiter configuration for the Digifinex API
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.DigifinexRateLimiters">
+            <summary>
+            Rate limiter configuration for the Digifinex API. Limits sourced from
+            <see href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />.
+            </summary>
+        </member>
+        <member name="E:Digifinex.Net.DigifinexRateLimiters.RateLimitTriggered">
+            <summary>
+            Event for when a rate limit is triggered
+            </summary>
+        </member>
+        <member name="E:Digifinex.Net.DigifinexRateLimiters.RateLimitUpdated">
+            <summary>
+            Event when the rate limit is updated. Note that it's only updated when a request is send,
+            so there are no specific updates when the current usage is decaying.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Enums.AssetTransferStatus">
+            <summary>
+            Asset deposit/withdraw status as returned by Digifinex <c>/v3/currencies</c>.
+            Numeric values match the wire format directly: <c>1</c> = enabled, <c>0</c> = disabled.
+            </summary>
+        </member>
+        <member name="F:Digifinex.Net.Enums.AssetTransferStatus.Disabled">
+            <summary>
+            ["<c>0</c>"] Disabled
+            </summary>
+        </member>
+        <member name="F:Digifinex.Net.Enums.AssetTransferStatus.Enabled">
+            <summary>
+            ["<c>1</c>"] Enabled
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Enums.OrderSide">
+            <summary>
+            Order side / trade aggressor side
+            </summary>
+        </member>
+        <member name="F:Digifinex.Net.Enums.OrderSide.Buy">
+            <summary>
+            ["<c>buy</c>"] Buy
+            </summary>
+        </member>
+        <member name="F:Digifinex.Net.Enums.OrderSide.Sell">
+            <summary>
+            ["<c>sell</c>"] Sell
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Enums.SymbolStatus">
+            <summary>
+            Trading status for a symbol as returned by the Digifinex <c>/v3/spot/symbols</c> endpoint.
+            </summary>
+        </member>
+        <member name="F:Digifinex.Net.Enums.SymbolStatus.Trading">
+            <summary>
+            ["<c>TRADING</c>"] Symbol is open for trading
+            </summary>
+        </member>
+        <member name="F:Digifinex.Net.Enums.SymbolStatus.Halted">
+            <summary>
+            ["<c>HALT</c>", "<c>HALTED</c>"] Trading on this symbol has been halted
+            </summary>
+        </member>
+        <member name="F:Digifinex.Net.Enums.SymbolStatus.Break">
+            <summary>
+            ["<c>BREAK</c>"] Symbol is paused
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Interfaces.Clients.IDigifinexRestClient">
+            <summary>
+            Client for accessing the Digifinex REST API.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Interfaces.Clients.IDigifinexRestClient.SpotApi">
+            <summary>
+            Spot API endpoints
+            </summary>
+            <see cref="T:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApi"/>
+        </member>
+        <member name="T:Digifinex.Net.Interfaces.Clients.IDigifinexSocketClient">
+            <summary>
+            Client for accessing the Digifinex websocket API.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Interfaces.Clients.IDigifinexSocketClient.SpotApi">
+            <summary>
+            Spot Socket API streams (<c>wss://openapi.digifinex.com/ws/v1/</c>)
+            </summary>
+            <see cref="T:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexSocketClientSpotApi"/>
+        </member>
+        <member name="T:Digifinex.Net.Interfaces.Clients.IDigifinexUserClientProvider">
+            <summary>
+            Provider for clients with credentials for specific users
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.IDigifinexUserClientProvider.InitializeUserClient(System.String,Digifinex.Net.DigifinexCredentials,Digifinex.Net.DigifinexEnvironment)">
+            <summary>
+            Initialize a client for the specified user identifier.
+            </summary>
+            <param name="userIdentifier">The identifier for the user</param>
+            <param name="credentials">The credentials for the user</param>
+            <param name="environment">The environment to use</param>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.IDigifinexUserClientProvider.ClearUserClients(System.String)">
+            <summary>
+            Reset the cached clients for a user.
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.IDigifinexUserClientProvider.GetRestClient(System.String,Digifinex.Net.DigifinexCredentials,Digifinex.Net.DigifinexEnvironment)">
+            <summary>
+            Get the Rest client for a specific user.
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.IDigifinexUserClientProvider.GetSocketClient(System.String,Digifinex.Net.DigifinexCredentials,Digifinex.Net.DigifinexEnvironment)">
+            <summary>
+            Get the Socket client for a specific user.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApi">
+            <summary>
+            Digifinex Spot API endpoints
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApi.ExchangeData">
+            <summary>
+            Endpoints related to retrieving market and system data
+            </summary>
+            <see cref="T:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApiExchangeData" />
+        </member>
+        <member name="T:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApiExchangeData">
+            <summary>
+            Digifinex Spot exchange-data REST endpoints (server time, markets, symbols, currencies,
+            tickers).
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApiExchangeData.GetServerTimeAsync(System.Threading.CancellationToken)">
+            <summary>
+            Get the server time. Useful as a connectivity check.
+            <para><a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" /></para>
+            </summary>
+            <param name="ct">Cancellation token</param>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApiExchangeData.GetMarketsAsync(System.Threading.CancellationToken)">
+            <summary>
+            Get the list of trading markets and their precision/notional rules.
+            <para><a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" /></para>
+            </summary>
+            <param name="ct">Cancellation token</param>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApiExchangeData.GetSymbolsAsync(System.Threading.CancellationToken)">
+            <summary>
+            Get the list of spot symbols including their trading status, base/quote, and supported
+            order types. Provides a richer view than <see cref="M:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApiExchangeData.GetMarketsAsync(System.Threading.CancellationToken)"/>.
+            <para><a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" /></para>
+            </summary>
+            <param name="ct">Cancellation token</param>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApiExchangeData.GetCurrenciesAsync(System.Threading.CancellationToken)">
+            <summary>
+            Get the list of currencies and their per-network deposit/withdraw status.
+            <para><a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" /></para>
+            </summary>
+            <param name="ct">Cancellation token</param>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexRestClientSpotApiExchangeData.GetTickersAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Get the 24h tickers. When <paramref name="symbol"/> is supplied the response contains
+            only that symbol's entry.
+            <para><a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" /></para>
+            </summary>
+            <param name="symbol">Optional market name (lowercase, for example <c>btc_usdt</c>)</param>
+            <param name="ct">Cancellation token</param>
+        </member>
+        <member name="T:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexSocketClientSpotApi">
+            <summary>
+            Digifinex Spot websocket subscriptions
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexSocketClientSpotApi.SubscribeToTradeUpdatesAsync(System.String,System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdateMessage}},System.Threading.CancellationToken)">
+            <summary>
+            Subscribe to public trade updates for a single symbol. Pushes are delivered via the
+            <c>trades.update</c> channel.
+            <para><a href="https://docs.digifinex.com/en-ww/spot/v1/websocket.html" /></para>
+            </summary>
+            <param name="symbol">Symbol in <c>BASE_QUOTE</c> form (for example <c>BTC_USDT</c>)</param>
+            <param name="onMessage">Handler invoked on every push</param>
+            <param name="ct">Cancellation token</param>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexSocketClientSpotApi.SubscribeToTradeUpdatesAsync(System.String[],System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdateMessage}},System.Threading.CancellationToken)">
+            <summary>
+            Subscribe to public trade updates for the supplied symbols. A single
+            <c>trades.subscribe</c> call carries the entire <paramref name="symbols"/> array; the
+            server emits one <c>trades.update</c> push per symbol and routing keeps the handler
+            invocation per-symbol.
+            <para><a href="https://docs.digifinex.com/en-ww/spot/v1/websocket.html" /></para>
+            </summary>
+            <param name="symbols">Symbols in <c>BASE_QUOTE</c> form (for example <c>BTC_USDT</c>)</param>
+            <param name="onMessage">Handler invoked on every push</param>
+            <param name="ct">Cancellation token</param>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexSocketClientSpotApi.SubscribeToTickerUpdatesAsync(System.String[],System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateEnvelope}},System.Threading.CancellationToken)">
+            <summary>
+            Subscribe to per-symbol ticker updates for the supplied symbols. Pushes are delivered
+            via the <c>ticker.update</c> channel.
+            <para><a href="https://docs.digifinex.com/en-ww/spot/v1/websocket.html" /></para>
+            </summary>
+            <param name="symbols">Symbols in <c>BASE_QUOTE</c> form (for example <c>BTC_USDT</c>)</param>
+            <param name="onMessage">Handler invoked on every push</param>
+            <param name="ct">Cancellation token</param>
+        </member>
+        <member name="M:Digifinex.Net.Interfaces.Clients.SpotApi.IDigifinexSocketClientSpotApi.SubscribeToAllTickerUpdatesAsync(System.Action{CryptoExchange.Net.Objects.Sockets.DataEvent{Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateEnvelope}},System.Threading.CancellationToken)">
+            <summary>
+            Subscribe to ticker updates for every currently listed market via the
+            <c>all_ticker.subscribe</c> channel. One subscribe covers all symbols; pushes arrive as
+            <c>all_ticker.update</c> envelopes throttled to ~1Hz server-side, each carrying a
+            partial slice of active tickers (full symbol coverage accumulates across pushes).
+            <para><a href="https://docs.digifinex.com/en-ww/spot/v1/websocket.html" /></para>
+            </summary>
+            <param name="onMessage">Handler invoked on every push</param>
+            <param name="ct">Cancellation token</param>
+        </member>
+        <member name="T:Digifinex.Net.Objects.DigifinexApiAddresses">
+            <summary>
+            Api addresses usable for the Digifinex clients
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.DigifinexApiAddresses.RestClientAddress">
+            <summary>
+            The address used by the DigifinexRestClient for the rest API (<c>https://openapi.digifinex.com</c>)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.DigifinexApiAddresses.SocketClientAddress">
+            <summary>
+            The address used by the DigifinexSocketClient for the spot websocket API (<c>wss://openapi.digifinex.com/ws/v1/</c>)
+            </summary>
+        </member>
+        <member name="F:Digifinex.Net.Objects.DigifinexApiAddresses.Default">
+            <summary>
+            The default addresses to connect to the Digifinex API
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.DigifinexCurrenciesResponse">
+            <summary>
+            Envelope returned by Digifinex GET /v3/currencies.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrenciesResponse.Data">
+            <summary>
+            ["<c>data</c>"] Per-(currency, network) entries; merge by <c>currency</c> for the per-asset view
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrenciesResponse.Code">
+            <summary>
+            ["<c>code</c>"] Response status code; <c>0</c> means success
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.DigifinexCurrency">
+            <summary>
+            Currency/asset entry as returned by Digifinex GET /v3/currencies. The endpoint emits one
+            row per (currency, chain) pair; merging the rows by currency yields the per-asset network
+            list consumed by the wrapper-side asset client.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrency.Currency">
+            <summary>
+            ["<c>currency</c>"] Asset symbol (for example <c>BTC</c>)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrency.Chain">
+            <summary>
+            ["<c>chain</c>"] On-chain network name (for example <c>BTC</c>, <c>ERC20</c>)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrency.MinDepositAmount">
+            <summary>
+            ["<c>min_deposit_amount</c>"] Minimum deposit amount accepted on this network
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrency.MinWithdrawAmount">
+            <summary>
+            ["<c>min_withdraw_amount</c>"] Minimum withdrawal amount accepted on this network
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrency.DepositStatus">
+            <summary>
+            ["<c>deposit_status</c>"] Whether deposits are currently enabled on this network
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrency.WithdrawStatus">
+            <summary>
+            ["<c>withdraw_status</c>"] Whether withdrawals are currently enabled on this network
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrency.WithdrawFeeCurrency">
+            <summary>
+            ["<c>withdraw_fee_currency</c>"] Currency in which the withdraw fee is denominated
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrency.MinWithdrawFee">
+            <summary>
+            ["<c>min_withdraw_fee</c>"] Fixed minimum withdraw fee
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexCurrency.WithdrawFeeRate">
+            <summary>
+            ["<c>withdraw_fee_rate</c>"] Withdraw fee rate (when applicable)
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.DigifinexMarket">
+            <summary>
+            Market entry as returned by Digifinex GET /v3/markets. The endpoint returns a flat list of
+            markets with precision and minimum-volume info, lower-case symbol names.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexMarket.Market">
+            <summary>
+            ["<c>market</c>"] Market name in <c>base_quote</c> form (for example <c>btc_usdt</c>)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexMarket.VolumePrecision">
+            <summary>
+            ["<c>volume_precision</c>"] Number of decimals supported for the order amount (base asset)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexMarket.PricePrecision">
+            <summary>
+            ["<c>price_precision</c>"] Number of decimals supported for the order price (quote asset)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexMarket.MinAmount">
+            <summary>
+            ["<c>min_amount</c>"] Minimum order value expressed in the quote asset (notional)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexMarket.MinVolume">
+            <summary>
+            ["<c>min_volume</c>"] Minimum order quantity expressed in the base asset
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.DigifinexMarketsResponse">
+            <summary>
+            Envelope returned by Digifinex GET /v3/markets.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexMarketsResponse.Data">
+            <summary>
+            ["<c>data</c>"] Per-market entries
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexMarketsResponse.Date">
+            <summary>
+            ["<c>date</c>"] Server timestamp
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexMarketsResponse.Code">
+            <summary>
+            ["<c>code</c>"] Response status code; <c>0</c> means success
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.DigifinexServerTime">
+            <summary>
+            Server time as returned by Digifinex GET /v3/time. The value is a Unix timestamp in
+            milliseconds; consumers convert via <see cref="M:System.DateTimeOffset.FromUnixTimeMilliseconds(System.Int64)"/>.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexServerTime.ServerTime">
+            <summary>
+            ["<c>server_time</c>"] Server time as a Unix timestamp in milliseconds
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexServerTime.Code">
+            <summary>
+            ["<c>code</c>"] Response status code; <c>0</c> means success
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.DigifinexSymbol">
+            <summary>
+            Symbol entry as returned by Digifinex GET /v3/spot/symbols. Contains richer per-symbol
+            metadata than <see cref="T:Digifinex.Net.Objects.Models.DigifinexMarket"/> (status, base/quote split, allowed order types).
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbol.Symbol">
+            <summary>
+            ["<c>symbol</c>"] Symbol name in <c>BASE_QUOTE</c> uppercase form (for example <c>BTC_USDT</c>)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbol.Status">
+            <summary>
+            ["<c>status</c>"] Trading status (for example <c>TRADING</c>)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbol.BaseAsset">
+            <summary>
+            ["<c>base_asset</c>"] Base asset symbol
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbol.QuoteAsset">
+            <summary>
+            ["<c>quote_asset</c>"] Quote asset symbol
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbol.AmountPrecision">
+            <summary>
+            ["<c>amount_precision</c>"] Number of decimals supported for the order amount (base asset)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbol.PricePrecision">
+            <summary>
+            ["<c>price_precision</c>"] Number of decimals supported for the order price (quote asset)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbol.MinimumAmount">
+            <summary>
+            ["<c>minimum_amount</c>"] Minimum order quantity in the base asset
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbol.MinimumValue">
+            <summary>
+            ["<c>minimum_value</c>"] Minimum order value (notional) in the quote asset
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbol.Zone">
+            <summary>
+            ["<c>zone</c>"] Trading zone identifier (for example <c>MainBoard</c>, <c>Innovation</c>)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbol.OrderTypes">
+            <summary>
+            ["<c>order_types</c>"] Supported order types for this symbol
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.DigifinexSymbolsResponse">
+            <summary>
+            Envelope returned by Digifinex GET /v3/spot/symbols.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbolsResponse.SymbolList">
+            <summary>
+            ["<c>symbol_list</c>"] Per-symbol entries
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexSymbolsResponse.Code">
+            <summary>
+            ["<c>code</c>"] Response status code; <c>0</c> means success
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.DigifinexTicker">
+            <summary>
+            24h ticker entry as returned by Digifinex GET /v3/ticker. Field names match the wire format.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTicker.Symbol">
+            <summary>
+            ["<c>symbol</c>"] Market name (for example <c>btc_usdt</c>)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTicker.Last">
+            <summary>
+            ["<c>last</c>"] Last trade price
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTicker.High">
+            <summary>
+            ["<c>high</c>"] Highest trade price in the rolling 24h window
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTicker.Low">
+            <summary>
+            ["<c>low</c>"] Lowest trade price in the rolling 24h window
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTicker.Buy">
+            <summary>
+            ["<c>buy</c>"] Best bid price
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTicker.Sell">
+            <summary>
+            ["<c>sell</c>"] Best ask price
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTicker.Volume">
+            <summary>
+            ["<c>vol</c>"] Volume in the base asset over the rolling 24h window
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTicker.BaseVolume">
+            <summary>
+            ["<c>base_vol</c>"] Volume in the quote asset over the rolling 24h window
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTicker.Change">
+            <summary>
+            ["<c>change</c>"] 24h price change percentage (already expressed in percent)
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.DigifinexTickerResponse">
+            <summary>
+            Envelope returned by Digifinex GET /v3/ticker. The exchange wraps the per-symbol entries
+            in a <c>ticker</c> array plus a top-level <c>date</c> and <c>code</c>.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTickerResponse.Ticker">
+            <summary>
+            ["<c>ticker</c>"] Per-symbol 24h ticker entries
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTickerResponse.Date">
+            <summary>
+            ["<c>date</c>"] Server timestamp; semantics match the global Digifinex envelope
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.DigifinexTickerResponse.Code">
+            <summary>
+            ["<c>code</c>"] Response status code; <c>0</c> means success
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexPingResponse">
+            <summary>
+            Response payload returned by the Digifinex websocket server to a <c>server.ping</c> request:
+            <c>{"error":null,"result":"pong","id":N}</c>. Distinct from <see cref="T:Digifinex.Net.Objects.Models.Socket.DigifinexSubscriptionResponse"/>
+            because <c>result</c> is a literal string here, not the structured object subscribe responses use.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexPingResponse.Id">
+            <summary>
+            ["<c>id</c>"] Echo of the client-supplied request id
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexPingResponse.Error">
+            <summary>
+            ["<c>error</c>"] Error envelope; absent (or <c>null</c>) on success
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexPingResponse.Result">
+            <summary>
+            ["<c>result</c>"] Always <c>"pong"</c> on success
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexSocketError">
+            <summary>
+            Error envelope returned in the <c>error</c> field of a Digifinex websocket subscribe/unsubscribe
+            response.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexSocketError.Code">
+            <summary>
+            ["<c>code</c>"] Numeric error code
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexSocketError.Message">
+            <summary>
+            ["<c>message</c>"] Human-readable error message
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexSocketRequest">
+            <summary>
+            JSON-RPC style request payload sent to the Digifinex websocket APIs. Examples:
+            <code>{"method":"trades.subscribe","id":42,"params":["BTC_USDT"]}</code>
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexSocketRequest.Method">
+            <summary>
+            ["<c>method</c>"] Method name (for example <c>trades.subscribe</c>, <c>ticker.subscribe</c>)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexSocketRequest.Id">
+            <summary>
+            ["<c>id</c>"] Client-supplied request id; the server echoes it back in the matching response
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexSocketRequest.Params">
+            <summary>
+            ["<c>params</c>"] Method parameters - typically the list of symbols to subscribe to.
+            May be <c>null</c> for parameter-less methods such as <c>all_ticker.subscribe</c>.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexSocketResult">
+            <summary>
+            Successful subscribe/unsubscribe result body emitted in the <c>result</c> field of the
+            JSON-RPC envelope. Shape: <c>{"status":"success"}</c>.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexSocketResult.Status">
+            <summary>
+            ["<c>status</c>"] Status string (<c>success</c> on a successful subscribe/unsubscribe)
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexSubscriptionResponse">
+            <summary>
+            Response payload returned by the Digifinex websocket server to a subscribe/unsubscribe
+            (and any other JSON-RPC) request. The server echoes the client-supplied <c>id</c>; either
+            <c>error</c> or <c>result</c> is populated.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexSubscriptionResponse.Id">
+            <summary>
+            ["<c>id</c>"] Echo of the client-supplied request id
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexSubscriptionResponse.Error">
+            <summary>
+            ["<c>error</c>"] Error envelope; absent (or <c>null</c>) on success
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexSubscriptionResponse.Result">
+            <summary>
+            ["<c>result</c>"] Result body; present on success
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate">
+            <summary>
+            Single ticker entry as carried inside the Digifinex <c>ticker.update</c> /
+            <c>all_ticker.update</c> websocket message. Field names match the wire format.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.Symbol">
+            <summary>
+            ["<c>symbol</c>"] Symbol name (for example <c>BTC_USDT</c>)
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.Open24h">
+            <summary>
+            ["<c>open_24h</c>"] Open price for the rolling 24h window
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.High24h">
+            <summary>
+            ["<c>high_24h</c>"] High price for the rolling 24h window
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.Low24h">
+            <summary>
+            ["<c>low_24h</c>"] Low price for the rolling 24h window
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.BaseVolume24h">
+            <summary>
+            ["<c>base_volume_24h</c>"] Volume in the base asset over the rolling 24h window
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.QuoteVolume24h">
+            <summary>
+            ["<c>quote_volume_24h</c>"] Volume in the quote asset over the rolling 24h window
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.Last">
+            <summary>
+            ["<c>last</c>"] Last trade price
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.LastQuantity">
+            <summary>
+            ["<c>last_qty</c>"] Last trade quantity
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.BestBid">
+            <summary>
+            ["<c>best_bid</c>"] Best bid price
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.BestBidSize">
+            <summary>
+            ["<c>best_bid_size</c>"] Best bid quantity
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.BestAsk">
+            <summary>
+            ["<c>best_ask</c>"] Best ask price
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.BestAskSize">
+            <summary>
+            ["<c>best_ask_size</c>"] Best ask quantity
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdate.Timestamp">
+            <summary>
+            ["<c>timestamp</c>"] Update timestamp in milliseconds since unix epoch
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateEnvelope">
+            <summary>
+            Top-level envelope received for <c>ticker.update</c> / <c>all_ticker.update</c> push events.
+            Carries the routing field plus the strongly-typed <see cref="T:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateMessage"/>
+            body containing one or more tickers.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateEnvelope.Method">
+            <summary>
+            ["<c>method</c>"] Either <c>ticker.update</c> (per-symbol) or <c>all_ticker.update</c>
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateEnvelope.Params">
+            <summary>
+            ["<c>params</c>"] Strongly-typed body carrying the ticker entries
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateMessage">
+            <summary>
+            Ticker update push received from the Digifinex <c>ticker.subscribe</c> /
+            <c>all_ticker.subscribe</c> channel. Wire shape:
+            <c>{"method":"ticker.update","params":[[ticker, ...]]}</c> for the per-symbol channel; the
+            all-symbols channel batches multiple tickers in a single push. The custom converter
+            flattens the params array down to a typed <see cref="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateMessage.Tickers"/> collection.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTickerUpdateMessage.Tickers">
+            <summary>
+            Ticker entries carried by this update.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexTradeEntry">
+            <summary>
+            Single trade entry as carried inside a Digifinex <c>trades.update</c> message.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeEntry.Id">
+            <summary>
+            ["<c>id</c>"] Trade id
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeEntry.Time">
+            <summary>
+            ["<c>time</c>"] Trade time as a Unix timestamp in seconds with optional fractional seconds
+            (for example <c>1523339279.761838</c>). Use <see cref="M:Digifinex.Net.Objects.Models.Socket.DigifinexTradeEntry.GetTimestamp"/> to convert to
+            a UTC <see cref="T:System.DateTime"/> while preserving microsecond precision.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeEntry.Price">
+            <summary>
+            ["<c>price</c>"] Trade price
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeEntry.Amount">
+            <summary>
+            ["<c>amount</c>"] Trade quantity in the base asset
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeEntry.Type">
+            <summary>
+            ["<c>type</c>"] Aggressor side (taker side) - <c>buy</c> or <c>sell</c>
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Objects.Models.Socket.DigifinexTradeEntry.GetTimestamp">
+            <summary>
+            Converts <see cref="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeEntry.Time"/> (fractional Unix seconds) to a UTC <see cref="T:System.DateTime"/>
+            with microsecond precision. <see cref="T:System.DateTime"/> ticks are 100ns each, so multiplying
+            by <see cref="F:System.TimeSpan.TicksPerSecond"/> retains all 6 fractional digits Digifinex publishes.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdate">
+            <summary>
+            Trade update message received from the Digifinex <c>trades.subscribe</c> websocket channel.
+            Wire shape: <c>{"method":"trades.update","params":[clean, [trades], "BTC_USDT"]}</c>.
+            The custom <see cref="T:Digifinex.Net.Converters.DigifinexTradeUpdateConverter"/> projects that heterogeneous params
+            array onto the strongly-typed properties below.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdate.Clean">
+            <summary>
+            First params entry: <c>true</c> when the update represents a complete (snapshot) state
+            rather than a delta.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdate.Trades">
+            <summary>
+            Second params entry: the trade entries themselves.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdate.Symbol">
+            <summary>
+            Third params entry: the symbol (for example <c>BTC_USDT</c>).
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdateMessage">
+            <summary>
+            Top-level envelope received for <c>trades.update</c> push events. Carries the routing
+            fields plus the strongly-typed <see cref="T:Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdate"/> body.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdateMessage.Method">
+            <summary>
+            ["<c>method</c>"] Always <c>trades.update</c>
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Models.Socket.DigifinexTradeUpdateMessage.Params">
+            <summary>
+            ["<c>params</c>"] Strongly-typed body carrying the trade list and symbol
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Options.DigifinexOptions">
+            <summary>
+            Digifinex options
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Options.DigifinexRestOptions">
+            <summary>
+            Options for the DigifinexRestClient
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Options.DigifinexRestOptions.Default">
+            <summary>
+            Default options for the DigifinexRestClient
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Objects.Options.DigifinexRestOptions.#ctor">
+            <summary>
+            ctor
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Options.DigifinexRestOptions.ApiOptions">
+            <summary>
+            Options for the Spot API
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Options.DigifinexSocketOptions">
+            <summary>
+            Options for the DigifinexSocketClient.
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Options.DigifinexSocketOptions.Default">
+            <summary>
+            Default options for the DigifinexSocketClient
+            </summary>
+        </member>
+        <member name="M:Digifinex.Net.Objects.Options.DigifinexSocketOptions.#ctor">
+            <summary>
+            ctor
+            </summary>
+        </member>
+        <member name="P:Digifinex.Net.Objects.Options.DigifinexSocketOptions.SpotOptions">
+            <summary>
+            Options for the Spot Socket API (<c>wss://openapi.digifinex.com/ws/v1/</c>)
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Sockets.DigifinexAllTickerSubscription">
+            <summary>
+            Subscription for the Digifinex <c>all_ticker</c> websocket channel
+            (<c>all_ticker.subscribe</c>). Empty <c>params</c> - one subscribe covers every currently
+            listed market. Pushes arrive as <c>all_ticker.update</c> envelopes throttled to ~1Hz
+            server-side; each push carries a partial slice of currently-active tickers and symbols
+            accumulate across pushes.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Sockets.DigifinexPingQuery">
+            <summary>
+            Application-level heartbeat for the Digifinex websocket. Sends
+            <c>{"id":N,"method":"server.ping","params":[]}</c>; the server answers with
+            <c>{"error":null,"result":"pong","id":N}</c>. The connection is dropped after 60 seconds
+            of silence, so the periodic registration in <see cref="T:Digifinex.Net.Clients.SpotApi.DigifinexSocketClientSpotApi"/>
+            fires this query at a sub-60s interval.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Sockets.DigifinexQuery">
+            <summary>
+            JSON-RPC subscribe/unsubscribe query for the Digifinex websocket APIs. The server echoes
+            the client-supplied <c>id</c> in both the success
+            (<c>{"error":null,"result":{"status":"success"},"id":N}</c>) and error
+            (<c>{"error":{"code":...,"message":"..."},"result":null,"id":N}</c>) response, so the
+            query is routed back to the originator by id.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Sockets.DigifinexTickerSubscription">
+            <summary>
+            Subscription for the Digifinex per-symbol <c>ticker</c> websocket channel
+            (<c>ticker.subscribe</c>). Accepts an explicit list of symbols.
+            </summary>
+        </member>
+        <member name="T:Digifinex.Net.Objects.Sockets.DigifinexTradeSubscription">
+            <summary>
+            Subscription for the Digifinex public <c>trades</c> websocket channel. A single
+            <c>trades.subscribe</c> call accepts an array of symbols (verified against the live
+            endpoint - the server replies with one success ack and then pushes <c>trades.update</c>
+            frames per symbol). Per-message routing uses the symbol carried in the third
+            <c>params</c> entry so a single subscription serves multiple symbols, each routed to its
+            own handler.
+            <para><a href="https://docs.digifinex.com/en-ww/spot/v1/websocket.html" /></para>
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions">
+            <summary>
+            Extensions for DI
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.AddDigifinex(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Add services such as the IDigifinexRestClient and IDigifinexSocketClient. Configures the services based on the provided configuration.
+            </summary>
+            <param name="services">The service collection</param>
+            <param name="configuration">The configuration(section) containing the options</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.AddDigifinex(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Digifinex.Net.Objects.Options.DigifinexOptions})">
+            <summary>
+            Add services such as the IDigifinexRestClient and IDigifinexSocketClient. Services will be configured based on the provided options.
+            </summary>
+            <param name="services">The service collection</param>
+            <param name="optionsDelegate">Set options for the Digifinex services</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.Bind_DigifinexOptions(Microsoft.Extensions.Configuration.IConfiguration,System.Object)">
+            <summary>Attempts to bind the given object instance to configuration values by matching property names against configuration keys recursively.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.TryGetConfigurationValue(Microsoft.Extensions.Configuration.IConfiguration,System.String,System.String@)">
+            <summary>Tries to get the configuration value for the specified key.</summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Configuration.Binder.SourceGeneration.BindingExtensions.ValidateConfigurationKeys(System.Type,System.Lazy{System.Collections.Generic.HashSet{System.String}},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Configuration.BinderOptions)">
+            <summary>If required by the binder options, validates that there are no unknown keys in the input configuration object.</summary>
+        </member>
+    </members>
+</doc>
