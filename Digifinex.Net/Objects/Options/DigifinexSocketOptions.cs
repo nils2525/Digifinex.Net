@@ -29,10 +29,19 @@ namespace Digifinex.Net.Objects.Options
         /// </summary>
         public SocketApiOptions SpotOptions { get; private set; } = new SocketApiOptions();
 
+        /// <summary>
+        /// Maximum lifetime of a single WebSocket connection before it is proactively recycled.
+        /// Digifinex closes WS connections server-side at the 2-hour mark (undocumented; the
+        /// public docs claim 24h). Defaults to 110min to stay under the observed cap with margin.
+        /// Set to <see cref="TimeSpan.Zero"/> to disable.
+        /// </summary>
+        public TimeSpan MaxConnectionLifetime { get; set; } = TimeSpan.FromMinutes(110);
+
         internal DigifinexSocketOptions Set(DigifinexSocketOptions targetOptions)
         {
             targetOptions = base.Set<DigifinexSocketOptions>(targetOptions);
             targetOptions.SpotOptions = SpotOptions.Set(targetOptions.SpotOptions);
+            targetOptions.MaxConnectionLifetime = MaxConnectionLifetime;
             return targetOptions;
         }
     }

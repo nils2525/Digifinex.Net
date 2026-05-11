@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.IO;
 using System.IO.Compression;
 using System.Net.WebSockets;
@@ -29,6 +30,13 @@ namespace Digifinex.Net.Clients.SpotApi
         public new DigifinexSocketOptions ClientOptions => (DigifinexSocketOptions)base.ClientOptions;
 
         protected override ErrorMapping ErrorMapping => DigifinexErrors.RestErrorMapping;
+
+        // Tracks the effective start time of each live socket (UTC, already jittered) so the
+        // periodic LifetimeRecycle task can recycle a connection before Digifinex's undocumented
+        // ~2h server-side close kicks in.
+        private readonly ConcurrentDictionary<int, DateTime> _connectionStartTimes = new();
+        private readonly Random _jitterRandom = new(Guid.NewGuid().GetHashCode());
+        private readonly object _jitterLock = new();
         #endregion
 
         #region ctor
@@ -39,7 +47,7 @@ namespace Digifinex.Net.Clients.SpotApi
             : base(logger, options.Environment.SocketBaseAddress, options, options.SpotOptions)
         {
             RateLimiter = DigifinexExchange.RateLimiter.Socket;
-            
+
             // Server drops the connection after 60s of silence (verified live: dropped at exactly
             // 60s when no traffic is sent). Send an application-level ping every 30s to keep the
             // connection alive; reconnect on ping timeout.
@@ -55,6 +63,43 @@ namespace Digifinex.Net.Clients.SpotApi
                         _ = connection.TriggerReconnectAsync();
                     }
                 });
+
+            // Digifinex also closes connections at the ~2h mark independent of activity
+            // (undocumented). Recycle proactively just under that cap so we
+            // control the rotation - one connection at a time, instead of all of them dropping
+            // together when the server decides to close them. Per-connection jitter staggers
+            // recycles across a 10-minute window so connections opened together don't all hit
+            // the threshold at once.
+            RegisterPeriodicQuery(
+                "LifetimeRecycle",
+                TimeSpan.FromSeconds(60),
+                connection =>
+                {
+                    var maxLifetime = ClientOptions.MaxConnectionLifetime;
+                    if (maxLifetime <= TimeSpan.Zero)
+                        return null!;
+
+                    var start = _connectionStartTimes.GetOrAdd(connection.SocketId, _ =>
+                    {
+                        TimeSpan jitter;
+                        lock (_jitterLock)
+                            jitter = TimeSpan.FromSeconds(_jitterRandom.NextDouble() * 600);
+                        return DateTime.UtcNow - jitter;
+                    });
+
+                    var age = DateTime.UtcNow - start;
+                    if (age < maxLifetime)
+                        return null!;
+
+                    _logger.LogInformation(
+                        "[Sckt {SocketId}] Proactively recycling connection (age {Age}, cap {Cap})",
+                        connection.SocketId, age, maxLifetime);
+                    _connectionStartTimes.TryRemove(connection.SocketId, out _);
+                    if (connection is SocketConnection sc)
+                        _ = sc.TriggerReconnectAsync();
+                    return null!;
+                },
+                null);
         }
         #endregion
 
