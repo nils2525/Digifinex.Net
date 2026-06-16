@@ -30,6 +30,11 @@ namespace Digifinex.Net.Objects.Options
         public SocketApiOptions SpotOptions { get; private set; } = new SocketApiOptions();
 
         /// <summary>
+        /// Options for the Swap Socket API (<c>wss://openapi.digifinex.com/swap_ws/v2/</c>)
+        /// </summary>
+        public SocketApiOptions SwapOptions { get; private set; } = new SocketApiOptions();
+
+        /// <summary>
         /// Maximum lifetime of a single WebSocket connection before it is proactively recycled.
         /// Digifinex closes WS connections server-side at the 2-hour mark (undocumented; the
         /// public docs claim 24h). Defaults to 110min to stay under the observed cap with margin.
@@ -41,6 +46,7 @@ namespace Digifinex.Net.Objects.Options
         {
             targetOptions = base.Set<DigifinexSocketOptions>(targetOptions);
             targetOptions.SpotOptions = SpotOptions.Set(targetOptions.SpotOptions);
+            targetOptions.SwapOptions = SwapOptions.Set(targetOptions.SwapOptions);
             targetOptions.MaxConnectionLifetime = MaxConnectionLifetime;
             return targetOptions;
         }

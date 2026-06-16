@@ -16,12 +16,18 @@ namespace Digifinex.Net.Objects
         public string SocketClientAddress { get; set; } = "";
 
         /// <summary>
+        /// The address used by the DigifinexSocketClient for the swap websocket API (<c>wss://openapi.digifinex.com/swap_ws/v2/</c>)
+        /// </summary>
+        public string SwapSocketClientAddress { get; set; } = "";
+
+        /// <summary>
         /// The default addresses to connect to the Digifinex API
         /// </summary>
         public static DigifinexApiAddresses Default = new DigifinexApiAddresses
         {
             RestClientAddress = "https://openapi.digifinex.com",
-            SocketClientAddress = "wss://openapi.digifinex.com/ws/v1/"
+            SocketClientAddress = "wss://openapi.digifinex.com/ws/v1/",
+            SwapSocketClientAddress = "wss://openapi.digifinex.com/swap_ws/v2/"
         };
     }
 }

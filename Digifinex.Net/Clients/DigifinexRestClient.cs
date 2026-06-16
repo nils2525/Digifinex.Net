@@ -1,6 +1,8 @@
 using Digifinex.Net.Clients.SpotApi;
+using Digifinex.Net.Clients.SwapApi;
 using Digifinex.Net.Interfaces.Clients;
 using Digifinex.Net.Interfaces.Clients.SpotApi;
+using Digifinex.Net.Interfaces.Clients.SwapApi;
 using Digifinex.Net.Objects.Options;
 using CryptoExchange.Net.Clients;
 using Microsoft.Extensions.Logging;
@@ -13,6 +15,8 @@ namespace Digifinex.Net.Clients
     {
         /// <inheritdoc />
         public IDigifinexRestClientSpotApi SpotApi { get; }
+        /// <inheritdoc />
+        public IDigifinexRestClientSwapApi SwapApi { get; }
 
         #region ctor
         /// <summary>
@@ -36,6 +40,7 @@ namespace Digifinex.Net.Clients
             Initialize(options.Value);
 
             SpotApi = AddApiClient(new DigifinexRestClientSpotApi(_logger, httpClient, options.Value));
+            SwapApi = AddApiClient(new DigifinexRestClientSwapApi(_logger, httpClient, options.Value));
         }
         #endregion
 

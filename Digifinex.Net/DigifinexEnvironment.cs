@@ -18,12 +18,19 @@ namespace Digifinex.Net
         /// </summary>
         public string SocketBaseAddress { get; }
 
+        /// <summary>
+        /// Swap Socket API address (<c>wss://openapi.digifinex.com/swap_ws/v2/</c>)
+        /// </summary>
+        public string SwapSocketBaseAddress { get; }
+
         internal DigifinexEnvironment(string name,
             string restBaseAddress,
-            string socketBaseAddress) : base(name)
+            string socketBaseAddress,
+            string? swapSocketBaseAddress = null) : base(name)
         {
             RestBaseAddress = restBaseAddress;
             SocketBaseAddress = socketBaseAddress;
+            SwapSocketBaseAddress = swapSocketBaseAddress ?? socketBaseAddress;
         }
 
         /// <summary>
@@ -58,7 +65,8 @@ namespace Digifinex.Net
         public static DigifinexEnvironment Live { get; }
             = new DigifinexEnvironment(TradeEnvironmentNames.Live,
                                        DigifinexApiAddresses.Default.RestClientAddress,
-                                       DigifinexApiAddresses.Default.SocketClientAddress);
+                                       DigifinexApiAddresses.Default.SocketClientAddress,
+                                       DigifinexApiAddresses.Default.SwapSocketClientAddress);
 
         /// <summary>
         /// Create a custom environment
@@ -66,7 +74,8 @@ namespace Digifinex.Net
         public static DigifinexEnvironment CreateCustom(
                         string name,
                         string restAddress,
-                        string socketAddress)
-            => new DigifinexEnvironment(name, restAddress, socketAddress);
+                        string socketAddress,
+                        string? swapSocketAddress = null)
+            => new DigifinexEnvironment(name, restAddress, socketAddress, swapSocketAddress);
     }
 }
