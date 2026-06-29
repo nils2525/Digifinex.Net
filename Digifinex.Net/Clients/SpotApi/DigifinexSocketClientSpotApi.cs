@@ -43,8 +43,8 @@ namespace Digifinex.Net.Clients.SpotApi
         /// <summary>
         /// Create a new instance of DigifinexSocketClientSpotApi
         /// </summary>
-        internal DigifinexSocketClientSpotApi(ILogger logger, DigifinexSocketOptions options)
-            : base(logger, options.Environment.SocketBaseAddress, options, options.SpotOptions)
+        internal DigifinexSocketClientSpotApi(ILoggerFactory? loggerFactory, DigifinexSocketOptions options)
+            : base(loggerFactory, DigifinexExchange.ExchangeName, options.Environment.SocketBaseAddress, options, options.SpotOptions)
         {
             RateLimiter = DigifinexExchange.RateLimiter.Socket;
 
@@ -147,11 +147,11 @@ namespace Digifinex.Net.Clients.SpotApi
 
         #region Subscriptions
         /// <inheritdoc />
-        public Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string symbol, Action<DataEvent<DigifinexTradeUpdateMessage>> onMessage, CancellationToken ct = default)
+        public Task<WebSocketResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string symbol, Action<DataEvent<DigifinexTradeUpdateMessage>> onMessage, CancellationToken ct = default)
             => SubscribeToTradeUpdatesAsync(new[] { symbol }, onMessage, ct);
 
         /// <inheritdoc />
-        public Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string[] symbols, Action<DataEvent<DigifinexTradeUpdateMessage>> onMessage, CancellationToken ct = default)
+        public Task<WebSocketResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string[] symbols, Action<DataEvent<DigifinexTradeUpdateMessage>> onMessage, CancellationToken ct = default)
         {
             var internalHandler = new Action<DateTime, string?, DigifinexTradeUpdateMessage>((receiveTime, originalData, data) =>
             {
@@ -168,7 +168,7 @@ namespace Digifinex.Net.Clients.SpotApi
         }
 
         /// <inheritdoc />
-        public Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(string[] symbols, Action<DataEvent<DigifinexTickerUpdateEnvelope>> onMessage, CancellationToken ct = default)
+        public Task<WebSocketResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(string[] symbols, Action<DataEvent<DigifinexTickerUpdateEnvelope>> onMessage, CancellationToken ct = default)
         {
             var internalHandler = new Action<DateTime, string?, DigifinexTickerUpdateEnvelope>((receiveTime, originalData, data) =>
             {
@@ -184,7 +184,7 @@ namespace Digifinex.Net.Clients.SpotApi
         }
 
         /// <inheritdoc />
-        public Task<CallResult<UpdateSubscription>> SubscribeToAllTickerUpdatesAsync(Action<DataEvent<DigifinexTickerUpdateEnvelope>> onMessage, CancellationToken ct = default)
+        public Task<WebSocketResult<UpdateSubscription>> SubscribeToAllTickerUpdatesAsync(Action<DataEvent<DigifinexTickerUpdateEnvelope>> onMessage, CancellationToken ct = default)
         {
             var internalHandler = new Action<DateTime, string?, DigifinexTickerUpdateEnvelope>((receiveTime, originalData, data) =>
             {

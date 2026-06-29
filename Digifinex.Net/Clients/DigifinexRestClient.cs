@@ -39,8 +39,8 @@ namespace Digifinex.Net.Clients
         {
             Initialize(options.Value);
 
-            SpotApi = AddApiClient(new DigifinexRestClientSpotApi(_logger, httpClient, options.Value));
-            SwapApi = AddApiClient(new DigifinexRestClientSwapApi(_logger, httpClient, options.Value));
+            SpotApi = AddApiClient(new DigifinexRestClientSpotApi(loggerFactory, httpClient, options.Value));
+            SwapApi = AddApiClient(new DigifinexRestClientSwapApi(loggerFactory, httpClient, options.Value));
         }
         #endregion
 

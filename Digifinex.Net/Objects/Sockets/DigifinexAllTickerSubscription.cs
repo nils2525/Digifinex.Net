@@ -24,7 +24,7 @@ namespace Digifinex.Net.Objects.Sockets
         {
             _handler = handler;
 
-            MessageRouter = MessageRouter.CreateWithoutTopicFilter<DigifinexTickerUpdateEnvelope>(["all_ticker.update"], DoHandleMessage);
+            MessageRouter = MessageRouter.CreateForEvent<DigifinexTickerUpdateEnvelope>(["all_ticker.update"], DoHandleMessage);
         }
 
         protected override Query? GetSubQuery(SocketConnection connection)
@@ -44,7 +44,7 @@ namespace Digifinex.Net.Objects.Sockets
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, DigifinexTickerUpdateEnvelope message)
         {
             _handler.Invoke(receiveTime, originalData, message);
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
     }
 }

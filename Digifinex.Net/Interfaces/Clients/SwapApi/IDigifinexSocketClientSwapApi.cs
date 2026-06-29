@@ -16,7 +16,7 @@ namespace Digifinex.Net.Interfaces.Clients.SwapApi
         /// <param name="instrumentId">Instrument id, for example <c>BTCUSDTPERP</c></param>
         /// <param name="onMessage">Trade event handler</param>
         /// <param name="ct">Cancellation token</param>
-        Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string instrumentId, Action<DataEvent<DigifinexSwapTradeUpdateMessage>> onMessage, CancellationToken ct = default);
+        Task<WebSocketResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string instrumentId, Action<DataEvent<DigifinexSwapTradeUpdateMessage>> onMessage, CancellationToken ct = default);
 
         /// <summary>
         /// Subscribe to public swap trade updates for one or more instruments.
@@ -24,6 +24,6 @@ namespace Digifinex.Net.Interfaces.Clients.SwapApi
         /// <param name="instrumentIds">Instrument ids, for example <c>BTCUSDTPERP</c></param>
         /// <param name="onMessage">Trade event handler</param>
         /// <param name="ct">Cancellation token</param>
-        Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string[] instrumentIds, Action<DataEvent<DigifinexSwapTradeUpdateMessage>> onMessage, CancellationToken ct = default);
+        Task<WebSocketResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string[] instrumentIds, Action<DataEvent<DigifinexSwapTradeUpdateMessage>> onMessage, CancellationToken ct = default);
     }
 }

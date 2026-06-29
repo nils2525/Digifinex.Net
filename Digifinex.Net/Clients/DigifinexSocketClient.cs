@@ -38,8 +38,8 @@ namespace Digifinex.Net.Clients
         {
             Initialize(options.Value);
 
-            SpotApi = AddApiClient(new DigifinexSocketClientSpotApi(_logger, options.Value));
-            SwapApi = AddApiClient(new DigifinexSocketClientSwapApi(_logger, options.Value));
+            SpotApi = AddApiClient(new DigifinexSocketClientSpotApi(loggerFactory, options.Value));
+            SwapApi = AddApiClient(new DigifinexSocketClientSwapApi(loggerFactory, options.Value));
         }
         #endregion
 

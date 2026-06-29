@@ -15,7 +15,7 @@ namespace Digifinex.Net.Objects.Sockets
     {
         public DigifinexSwapQuery(DigifinexSwapSocketRequest request, bool authenticated, int weight = 1) : base(AssignRequestId(request), authenticated, weight)
         {
-            MessageRouter = MessageRouter.CreateWithoutTopicFilter<DigifinexSwapSubscriptionResponse>(
+            MessageRouter = MessageRouter.CreateForQuery<DigifinexSwapSubscriptionResponse>(
                 request.Id.ToString(), HandleMessage);
         }
 
@@ -25,10 +25,10 @@ namespace Digifinex.Net.Objects.Sockets
             {
                 var code = message.Code.ToString();
                 var info = DigifinexErrors.RestErrorMapping.GetErrorInfo(code, message.Message);
-                return new CallResult<DigifinexSwapSubscriptionResponse>(new ServerError(code, info));
+                return CallResult.Fail<DigifinexSwapSubscriptionResponse>(new ServerError(code, info));
             }
 
-            return new CallResult<DigifinexSwapSubscriptionResponse>(message, originalData, null);
+            return CallResult.Ok(message, originalData);
         }
 
         private static DigifinexSwapSocketRequest AssignRequestId(DigifinexSwapSocketRequest request)

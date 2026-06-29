@@ -26,7 +26,7 @@ namespace Digifinex.Net.Objects.Sockets
 
             var routes = new List<MessageRoute>();
             foreach (var instrumentId in instrumentIds)
-                routes.Add(MessageRoute<DigifinexSwapTradeUpdateMessage>.CreateWithTopicFilter("trades.update", instrumentId, DoHandleMessage));
+                routes.Add(MessageRoute.CreateForEvent<DigifinexSwapTradeUpdateMessage>("trades.update", instrumentId, DoHandleMessage));
             MessageRouter = MessageRouter.Create(routes.ToArray());
         }
 
@@ -47,7 +47,7 @@ namespace Digifinex.Net.Objects.Sockets
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, DigifinexSwapTradeUpdateMessage message)
         {
             _handler.Invoke(receiveTime, originalData, message);
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
     }
 }

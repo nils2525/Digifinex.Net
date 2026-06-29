@@ -16,6 +16,12 @@ namespace Digifinex.Net
     public static class DigifinexExchange
     {
         internal static JsonSerializerContext _serializerContext = JsonSerializerContextCache.GetOrCreate<DigifinexSourceGenerationContext>();
+        internal static readonly ParameterSerializationSettings _parameterSerializationSettings = new()
+        {
+            Decimal = DecimalSerialization.String,
+            Array = ArrayParametersSerialization.MultipleValues,
+            Sort = false
+        };
 
         /// <summary>
         /// Platform metadata
@@ -27,7 +33,8 @@ namespace Digifinex.Net
                 "https://www.digifinex.com",
                 ["https://docs.digifinex.com/"],
                 PlatformType.CryptoCurrencyExchange,
-                CentralizationType.Centralized
+                CentralizationType.Centralized,
+                DigifinexEnvironment.All
                 );
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace Digifinex.Net
         #region Methods
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration requestConfig)
         {
-            if (!requestConfig.Authenticated)
+            if (!requestConfig.RequestDefinition.Authenticated)
                 return;
 
             var timestamp = (long.Parse(GetMillisecondTimestamp(apiClient)) / 1000).ToString();

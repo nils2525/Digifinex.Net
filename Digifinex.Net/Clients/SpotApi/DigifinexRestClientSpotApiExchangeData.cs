@@ -21,9 +21,9 @@ namespace Digifinex.Net.Clients.SpotApi
         /// <a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
         /// </summary>
         /// <inheritdoc />
-        public Task<WebCallResult<DigifinexServerTime>> GetServerTimeAsync(CancellationToken ct = default)
+        public Task<HttpResult<DigifinexServerTime>> GetServerTimeAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/v3/time", DigifinexExchange.RateLimiter.Rest, 1, false);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "/v3/time", DigifinexExchange.RateLimiter.Rest, 1, false);
             return _baseClient.SendAsync<DigifinexServerTime>(request, null, ct);
         }
 
@@ -35,9 +35,9 @@ namespace Digifinex.Net.Clients.SpotApi
         /// <a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
         /// </summary>
         /// <inheritdoc />
-        public Task<WebCallResult<DigifinexMarketsResponse>> GetMarketsAsync(CancellationToken ct = default)
+        public Task<HttpResult<DigifinexMarketsResponse>> GetMarketsAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/v3/markets", DigifinexExchange.RateLimiter.Rest, 1, false);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "/v3/markets", DigifinexExchange.RateLimiter.Rest, 1, false);
             return _baseClient.SendAsync<DigifinexMarketsResponse>(request, null, ct);
         }
 
@@ -49,9 +49,9 @@ namespace Digifinex.Net.Clients.SpotApi
         /// <a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
         /// </summary>
         /// <inheritdoc />
-        public Task<WebCallResult<DigifinexSymbolsResponse>> GetSymbolsAsync(CancellationToken ct = default)
+        public Task<HttpResult<DigifinexSymbolsResponse>> GetSymbolsAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/v3/spot/symbols", DigifinexExchange.RateLimiter.Rest, 1, false);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "/v3/spot/symbols", DigifinexExchange.RateLimiter.Rest, 1, false);
             return _baseClient.SendAsync<DigifinexSymbolsResponse>(request, null, ct);
         }
 
@@ -63,9 +63,9 @@ namespace Digifinex.Net.Clients.SpotApi
         /// <a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
         /// </summary>
         /// <inheritdoc />
-        public Task<WebCallResult<DigifinexCurrenciesResponse>> GetCurrenciesAsync(CancellationToken ct = default)
+        public Task<HttpResult<DigifinexCurrenciesResponse>> GetCurrenciesAsync(CancellationToken ct = default)
         {
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/v3/currencies", DigifinexExchange.RateLimiter.Rest, 1, false);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "/v3/currencies", DigifinexExchange.RateLimiter.Rest, 1, false);
             return _baseClient.SendAsync<DigifinexCurrenciesResponse>(request, null, ct);
         }
 
@@ -77,12 +77,12 @@ namespace Digifinex.Net.Clients.SpotApi
         /// <a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" />
         /// </summary>
         /// <inheritdoc />
-        public Task<WebCallResult<DigifinexTickerResponse>> GetTickersAsync(string? symbol = null, CancellationToken ct = default)
+        public Task<HttpResult<DigifinexTickerResponse>> GetTickersAsync(string? symbol = null, CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection();
-            parameters.AddOptional("symbol", symbol);
+            var parameters = new Parameters(DigifinexExchange._parameterSerializationSettings);
+            parameters.Add("symbol", symbol);
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/v3/ticker", DigifinexExchange.RateLimiter.Rest, 1, false);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "/v3/ticker", DigifinexExchange.RateLimiter.Rest, 1, false);
             return _baseClient.SendAsync<DigifinexTickerResponse>(request, parameters, ct);
         }
 

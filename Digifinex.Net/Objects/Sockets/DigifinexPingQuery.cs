@@ -1,5 +1,6 @@
 using Digifinex.Net.Objects.Models.Socket;
 using CryptoExchange.Net;
+using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
 using CryptoExchange.Net.Sockets.Default.Routing;
 
@@ -19,8 +20,9 @@ namespace Digifinex.Net.Objects.Sockets
             RequestTimeout = TimeSpan.FromSeconds(5);
             // Server echoes the client-supplied id; route the pong by that id, no handler needed
             // (the framework's request-response correlation completes the query for us).
-            MessageRouter = MessageRouter.CreateWithoutHandler<DigifinexPingResponse>(
-                ((DigifinexSocketRequest)Request).Id.ToString());
+            MessageRouter = MessageRouter.CreateForQuery<DigifinexPingResponse>(
+                ((DigifinexSocketRequest)Request).Id.ToString(),
+                (connection, receiveTime, originalData, message) => CallResult.Ok(message, originalData));
         }
 
         private static DigifinexSocketRequest BuildRequest()

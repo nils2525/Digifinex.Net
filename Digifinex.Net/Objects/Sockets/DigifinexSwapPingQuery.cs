@@ -1,4 +1,5 @@
 using CryptoExchange.Net;
+using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Sockets;
 using CryptoExchange.Net.Sockets.Default.Routing;
 using Digifinex.Net.Objects.Models.Socket;
@@ -13,8 +14,9 @@ namespace Digifinex.Net.Objects.Sockets
         public DigifinexSwapPingQuery() : base(BuildRequest(), false, 0)
         {
             RequestTimeout = TimeSpan.FromSeconds(5);
-            MessageRouter = MessageRouter.CreateWithoutHandler<DigifinexSwapPingResponse>(
-                ((DigifinexSwapSocketRequest)Request).Id.ToString());
+            MessageRouter = MessageRouter.CreateForQuery<DigifinexSwapPingResponse>(
+                ((DigifinexSwapSocketRequest)Request).Id.ToString(),
+                (connection, receiveTime, originalData, message) => CallResult.Ok(message, originalData));
         }
 
         private static DigifinexSwapSocketRequest BuildRequest()

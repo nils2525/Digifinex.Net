@@ -28,8 +28,8 @@ namespace Digifinex.Net.Clients.SwapApi
         /// <inheritdoc />
         public IDigifinexRestClientSwapApiExchangeData ExchangeData { get; }
 
-        public DigifinexRestClientSwapApi(ILogger logger, HttpClient? httpClient, DigifinexRestOptions options) :
-            base(logger, httpClient, options.Environment.RestBaseAddress, options, options.ApiOptions)
+        public DigifinexRestClientSwapApi(ILoggerFactory? loggerFactory, HttpClient? httpClient, DigifinexRestOptions options) :
+            base(loggerFactory, DigifinexExchange.ExchangeName, httpClient, options.Environment.RestBaseAddress, options, options.ApiOptions)
         {
             RequestBodyFormat = RequestBodyFormat.Json;
             RequestBodyEmptyContent = string.Empty;
@@ -47,12 +47,9 @@ namespace Digifinex.Net.Clients.SwapApi
         public override string FormatSymbol(string baseAsset, string quoteAsset, TradingMode tradingMode, DateTime? deliverTime = null)
                 => DigifinexExchange.FormatSymbol(baseAsset, quoteAsset, tradingMode, deliverTime);
 
-        internal Task<WebCallResult<T>> SendAsync<T>(RequestDefinition definition, ParameterCollection? parameters, CancellationToken cancellationToken, int? weight = null) where T : class
-            => SendToAddressAsync<T>(BaseAddress, definition, parameters, cancellationToken, weight);
-
-        internal async Task<WebCallResult<T>> SendToAddressAsync<T>(string baseAddress, RequestDefinition definition, ParameterCollection? parameters, CancellationToken cancellationToken, int? weight = null) where T : class
+        internal async Task<HttpResult<T>> SendAsync<T>(RequestDefinition definition, Parameters? parameters, CancellationToken cancellationToken, int? weight = null) where T : class
         {
-            return await base.SendAsync<T>(baseAddress, definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
+            return await base.SendAsync<T>(definition, parameters, cancellationToken, null, weight).ConfigureAwait(false);
         }
     }
 }

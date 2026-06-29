@@ -16,25 +16,25 @@ namespace Digifinex.Net.Clients.SwapApi
         }
 
         /// <inheritdoc />
-        public Task<WebCallResult<DigifinexSwapInstrumentsResponse>> GetInstrumentsAsync(int? type = null, CancellationToken ct = default)
+        public Task<HttpResult<DigifinexSwapInstrumentsResponse>> GetInstrumentsAsync(int? type = null, CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection();
-            parameters.AddOptional("type", type);
+            var parameters = new Parameters(DigifinexExchange._parameterSerializationSettings);
+            parameters.Add("type", type);
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/swap/v2/public/instruments", DigifinexExchange.RateLimiter.Rest, 1, false);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "/swap/v2/public/instruments", DigifinexExchange.RateLimiter.Rest, 1, false);
             return _baseClient.SendAsync<DigifinexSwapInstrumentsResponse>(request, parameters, ct);
         }
 
         /// <inheritdoc />
-        public Task<WebCallResult<DigifinexSwapTradesResponse>> GetRecentTradesAsync(string instrumentId, int? limit = null, CancellationToken ct = default)
+        public Task<HttpResult<DigifinexSwapTradesResponse>> GetRecentTradesAsync(string instrumentId, int? limit = null, CancellationToken ct = default)
         {
-            var parameters = new ParameterCollection
+            var parameters = new Parameters(DigifinexExchange._parameterSerializationSettings)
             {
                 { "instrument_id", instrumentId }
             };
-            parameters.AddOptional("limit", limit);
+            parameters.Add("limit", limit);
 
-            var request = _definitions.GetOrCreate(HttpMethod.Get, "/swap/v2/public/trades", DigifinexExchange.RateLimiter.Rest, 1, false);
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "/swap/v2/public/trades", DigifinexExchange.RateLimiter.Rest, 1, false);
             return _baseClient.SendAsync<DigifinexSwapTradesResponse>(request, parameters, ct);
         }
     }

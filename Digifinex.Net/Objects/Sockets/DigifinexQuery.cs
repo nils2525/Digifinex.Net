@@ -19,7 +19,7 @@ namespace Digifinex.Net.Objects.Sockets
     {
         public DigifinexQuery(DigifinexSocketRequest request, bool authenticated, int weight = 1) : base(AssignRequestId(request), authenticated, weight)
         {
-            MessageRouter = MessageRouter.CreateWithoutTopicFilter<DigifinexSubscriptionResponse>(
+            MessageRouter = MessageRouter.CreateForQuery<DigifinexSubscriptionResponse>(
                 request.Id.ToString(), HandleMessage);
         }
 
@@ -29,10 +29,10 @@ namespace Digifinex.Net.Objects.Sockets
             {
                 var code = message.Error.Code.ToString();
                 var info = DigifinexErrors.RestErrorMapping.GetErrorInfo(code, message.Error.Message);
-                return new CallResult<DigifinexSubscriptionResponse>(new ServerError(code, info));
+                return CallResult.Fail<DigifinexSubscriptionResponse>(new ServerError(code, info));
             }
 
-            return new CallResult<DigifinexSubscriptionResponse>(message, originalData, null);
+            return CallResult.Ok(message, originalData);
         }
 
         private static DigifinexSocketRequest AssignRequestId(DigifinexSocketRequest request)

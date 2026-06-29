@@ -34,8 +34,8 @@ namespace Digifinex.Net.Clients.SwapApi
         private readonly Random _jitterRandom = new(Guid.NewGuid().GetHashCode());
         private readonly object _jitterLock = new();
 
-        internal DigifinexSocketClientSwapApi(ILogger logger, DigifinexSocketOptions options)
-            : base(logger, options.Environment.SwapSocketBaseAddress, options, options.SwapOptions)
+        internal DigifinexSocketClientSwapApi(ILoggerFactory? loggerFactory, DigifinexSocketOptions options)
+            : base(loggerFactory, DigifinexExchange.ExchangeName, options.Environment.SwapSocketBaseAddress, options, options.SwapOptions)
         {
             RateLimiter = DigifinexExchange.RateLimiter.Socket;
             MaxIndividualSubscriptionsPerConnection = 30;
@@ -121,11 +121,11 @@ namespace Digifinex.Net.Clients.SwapApi
         }
 
         /// <inheritdoc />
-        public Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string instrumentId, Action<DataEvent<DigifinexSwapTradeUpdateMessage>> onMessage, CancellationToken ct = default)
+        public Task<WebSocketResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string instrumentId, Action<DataEvent<DigifinexSwapTradeUpdateMessage>> onMessage, CancellationToken ct = default)
             => SubscribeToTradeUpdatesAsync(new[] { instrumentId }, onMessage, ct);
 
         /// <inheritdoc />
-        public Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string[] instrumentIds, Action<DataEvent<DigifinexSwapTradeUpdateMessage>> onMessage, CancellationToken ct = default)
+        public Task<WebSocketResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string[] instrumentIds, Action<DataEvent<DigifinexSwapTradeUpdateMessage>> onMessage, CancellationToken ct = default)
         {
             var internalHandler = new Action<DateTime, string?, DigifinexSwapTradeUpdateMessage>((receiveTime, originalData, data) =>
             {

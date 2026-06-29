@@ -38,7 +38,7 @@ namespace Digifinex.Net.Objects.Sockets
             // event out to the right per-symbol callback.
             var routes = new List<MessageRoute>();
             foreach (var symbol in symbols)
-                routes.Add(MessageRoute<DigifinexTradeUpdateMessage>.CreateWithTopicFilter("trades.update", symbol, DoHandleMessage));
+                routes.Add(MessageRoute.CreateForEvent<DigifinexTradeUpdateMessage>("trades.update", symbol, DoHandleMessage));
             MessageRouter = MessageRouter.Create(routes.ToArray());
         }
         #endregion
@@ -61,7 +61,7 @@ namespace Digifinex.Net.Objects.Sockets
         public CallResult DoHandleMessage(SocketConnection connection, DateTime receiveTime, string? originalData, DigifinexTradeUpdateMessage message)
         {
             _handler.Invoke(receiveTime, originalData, message);
-            return CallResult.SuccessResult;
+            return CallResult.Ok();
         }
         #endregion
     }

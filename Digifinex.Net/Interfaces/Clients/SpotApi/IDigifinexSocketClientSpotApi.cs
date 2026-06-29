@@ -18,7 +18,7 @@ namespace Digifinex.Net.Interfaces.Clients.SpotApi
         /// <param name="symbol">Symbol in <c>BASE_QUOTE</c> form (for example <c>BTC_USDT</c>)</param>
         /// <param name="onMessage">Handler invoked on every push</param>
         /// <param name="ct">Cancellation token</param>
-        Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string symbol, Action<DataEvent<DigifinexTradeUpdateMessage>> onMessage, CancellationToken ct = default);
+        Task<WebSocketResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string symbol, Action<DataEvent<DigifinexTradeUpdateMessage>> onMessage, CancellationToken ct = default);
 
         /// <summary>
         /// Subscribe to public trade updates for the supplied symbols. A single
@@ -30,7 +30,7 @@ namespace Digifinex.Net.Interfaces.Clients.SpotApi
         /// <param name="symbols">Symbols in <c>BASE_QUOTE</c> form (for example <c>BTC_USDT</c>)</param>
         /// <param name="onMessage">Handler invoked on every push</param>
         /// <param name="ct">Cancellation token</param>
-        Task<CallResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string[] symbols, Action<DataEvent<DigifinexTradeUpdateMessage>> onMessage, CancellationToken ct = default);
+        Task<WebSocketResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string[] symbols, Action<DataEvent<DigifinexTradeUpdateMessage>> onMessage, CancellationToken ct = default);
 
         /// <summary>
         /// Subscribe to per-symbol ticker updates for the supplied symbols. Pushes are delivered
@@ -40,7 +40,7 @@ namespace Digifinex.Net.Interfaces.Clients.SpotApi
         /// <param name="symbols">Symbols in <c>BASE_QUOTE</c> form (for example <c>BTC_USDT</c>)</param>
         /// <param name="onMessage">Handler invoked on every push</param>
         /// <param name="ct">Cancellation token</param>
-        Task<CallResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(string[] symbols, Action<DataEvent<DigifinexTickerUpdateEnvelope>> onMessage, CancellationToken ct = default);
+        Task<WebSocketResult<UpdateSubscription>> SubscribeToTickerUpdatesAsync(string[] symbols, Action<DataEvent<DigifinexTickerUpdateEnvelope>> onMessage, CancellationToken ct = default);
 
         /// <summary>
         /// Subscribe to ticker updates for every currently listed market via the
@@ -51,6 +51,6 @@ namespace Digifinex.Net.Interfaces.Clients.SpotApi
         /// </summary>
         /// <param name="onMessage">Handler invoked on every push</param>
         /// <param name="ct">Cancellation token</param>
-        Task<CallResult<UpdateSubscription>> SubscribeToAllTickerUpdatesAsync(Action<DataEvent<DigifinexTickerUpdateEnvelope>> onMessage, CancellationToken ct = default);
+        Task<WebSocketResult<UpdateSubscription>> SubscribeToAllTickerUpdatesAsync(Action<DataEvent<DigifinexTickerUpdateEnvelope>> onMessage, CancellationToken ct = default);
     }
 }

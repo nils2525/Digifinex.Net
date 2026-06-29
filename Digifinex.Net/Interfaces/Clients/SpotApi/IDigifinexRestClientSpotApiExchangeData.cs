@@ -14,14 +14,14 @@ namespace Digifinex.Net.Interfaces.Clients.SpotApi
         /// <para><a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" /></para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<DigifinexServerTime>> GetServerTimeAsync(CancellationToken ct = default);
+        Task<HttpResult<DigifinexServerTime>> GetServerTimeAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get the list of trading markets and their precision/notional rules.
         /// <para><a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" /></para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<DigifinexMarketsResponse>> GetMarketsAsync(CancellationToken ct = default);
+        Task<HttpResult<DigifinexMarketsResponse>> GetMarketsAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get the list of spot symbols including their trading status, base/quote, and supported
@@ -29,14 +29,14 @@ namespace Digifinex.Net.Interfaces.Clients.SpotApi
         /// <para><a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" /></para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<DigifinexSymbolsResponse>> GetSymbolsAsync(CancellationToken ct = default);
+        Task<HttpResult<DigifinexSymbolsResponse>> GetSymbolsAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get the list of currencies and their per-network deposit/withdraw status.
         /// <para><a href="https://docs.digifinex.com/en-ww/spot/v3/rest.html" /></para>
         /// </summary>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<DigifinexCurrenciesResponse>> GetCurrenciesAsync(CancellationToken ct = default);
+        Task<HttpResult<DigifinexCurrenciesResponse>> GetCurrenciesAsync(CancellationToken ct = default);
 
         /// <summary>
         /// Get the 24h tickers. When <paramref name="symbol"/> is supplied the response contains
@@ -45,6 +45,6 @@ namespace Digifinex.Net.Interfaces.Clients.SpotApi
         /// </summary>
         /// <param name="symbol">Optional market name (lowercase, for example <c>btc_usdt</c>)</param>
         /// <param name="ct">Cancellation token</param>
-        Task<WebCallResult<DigifinexTickerResponse>> GetTickersAsync(string? symbol = null, CancellationToken ct = default);
+        Task<HttpResult<DigifinexTickerResponse>> GetTickersAsync(string? symbol = null, CancellationToken ct = default);
     }
 }
