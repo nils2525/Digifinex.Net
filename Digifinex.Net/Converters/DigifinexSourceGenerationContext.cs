@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Digifinex.Net.Objects.Models;
 using Digifinex.Net.Objects.Models.Socket;
+using CryptoExchange.Net.Objects;
 
 namespace Digifinex.Net.Converters
 {
@@ -50,6 +51,7 @@ namespace Digifinex.Net.Converters
     [JsonSerializable(typeof(bool))]
     [JsonSerializable(typeof(int))]
     [JsonSerializable(typeof(long))]
+    [JsonSerializable(typeof(Parameters))]
     internal partial class DigifinexSourceGenerationContext : JsonSerializerContext
     { }
 }
