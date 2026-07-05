@@ -13,6 +13,7 @@ using CryptoExchange.Net.Objects.Sockets;
 using CryptoExchange.Net.SharedApis;
 using CryptoExchange.Net.Sockets;
 using CryptoExchange.Net.Sockets.Default;
+using CryptoExchange.Net.Sockets.Interfaces;
 using Digifinex.Net.Clients.MessageHandlers;
 using Digifinex.Net.Interfaces.Clients.SwapApi;
 using Digifinex.Net.Objects.Models.Socket;
@@ -90,6 +91,12 @@ namespace Digifinex.Net.Clients.SwapApi
 
         protected override DigifinexAuthenticationProvider CreateAuthenticationProvider(DigifinexCredentials credentials)
             => new DigifinexAuthenticationProvider(credentials);
+
+        protected override Task<Uri?> GetReconnectUriAsync(ISocketConnection connection)
+        {
+            _connectionStartTimes.TryRemove(connection.SocketId, out _);
+            return base.GetReconnectUriAsync(connection);
+        }
 
         public override ISocketMessageHandler CreateMessageConverter(WebSocketMessageType messageType)
             => new DigifinexSwapSocketMessageHandler();

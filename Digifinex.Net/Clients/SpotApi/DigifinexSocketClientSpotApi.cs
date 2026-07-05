@@ -18,6 +18,7 @@ using CryptoExchange.Net.Objects.Sockets;
 using CryptoExchange.Net.SharedApis;
 using CryptoExchange.Net.Sockets;
 using CryptoExchange.Net.Sockets.Default;
+using CryptoExchange.Net.Sockets.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Digifinex.Net.Clients.SpotApi
@@ -109,6 +110,12 @@ namespace Digifinex.Net.Clients.SpotApi
 
         protected override DigifinexAuthenticationProvider CreateAuthenticationProvider(DigifinexCredentials credentials)
             => new DigifinexAuthenticationProvider(credentials);
+
+        protected override Task<Uri?> GetReconnectUriAsync(ISocketConnection connection)
+        {
+            _connectionStartTimes.TryRemove(connection.SocketId, out _);
+            return base.GetReconnectUriAsync(connection);
+        }
 
         public override ISocketMessageHandler CreateMessageConverter(WebSocketMessageType messageType)
             => new DigifinexSocketMessageHandler();
