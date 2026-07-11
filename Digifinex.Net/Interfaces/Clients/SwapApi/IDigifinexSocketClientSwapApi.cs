@@ -1,6 +1,7 @@
 using CryptoExchange.Net.Interfaces.Clients;
 using CryptoExchange.Net.Objects;
 using CryptoExchange.Net.Objects.Sockets;
+using Digifinex.Net.Objects.Models;
 using Digifinex.Net.Objects.Models.Socket;
 
 namespace Digifinex.Net.Interfaces.Clients.SwapApi
@@ -25,5 +26,13 @@ namespace Digifinex.Net.Interfaces.Clients.SwapApi
         /// <param name="onMessage">Trade event handler</param>
         /// <param name="ct">Cancellation token</param>
         Task<WebSocketResult<UpdateSubscription>> SubscribeToTradeUpdatesAsync(string[] instrumentIds, Action<DataEvent<DigifinexSwapTradeUpdateMessage>> onMessage, CancellationToken ct = default);
+
+        /// <summary>
+        /// Subscribe to public ticker updates for every swap instrument.
+        /// <para><a href="https://docs.digifinex.com/en-ww/swap/v2/websocket.html#all-ticker" /></para>
+        /// </summary>
+        /// <param name="onMessage">Ticker event handler.</param>
+        /// <param name="ct">Cancellation token.</param>
+        Task<WebSocketResult<UpdateSubscription>> SubscribeToAllTickerUpdatesAsync(Action<DataEvent<DigifinexSwapTicker[]>> onMessage, CancellationToken ct = default);
     }
 }

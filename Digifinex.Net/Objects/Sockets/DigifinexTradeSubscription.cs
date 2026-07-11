@@ -31,6 +31,7 @@ namespace Digifinex.Net.Objects.Sockets
         {
             _symbols = symbols;
             _handler = handler;
+            IndividualSubscriptionCount = Math.Max(1, symbols.Length);
 
             // Build one route per symbol so the framework's topic-filter can match the symbol
             // carried in `params[2]` (DigifinexSocketMessageHandler maps the topic to

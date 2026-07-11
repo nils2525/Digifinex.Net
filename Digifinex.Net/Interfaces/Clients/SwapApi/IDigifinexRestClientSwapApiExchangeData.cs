@@ -24,5 +24,13 @@ namespace Digifinex.Net.Interfaces.Clients.SwapApi
         /// <param name="limit">Result limit, 1-100</param>
         /// <param name="ct">Cancellation token</param>
         Task<HttpResult<DigifinexSwapTradesResponse>> GetRecentTradesAsync(string instrumentId, int? limit = null, CancellationToken ct = default);
+
+        /// <summary>
+        /// Get public ticker information for a swap instrument.
+        /// <para><a href="https://docs.digifinex.com/en-ww/swap/v2/rest.html#ticker" /></para>
+        /// </summary>
+        /// <param name="instrumentId">Instrument id, for example <c>BTCUSDTPERP</c>.</param>
+        /// <param name="ct">Cancellation token.</param>
+        Task<HttpResult<DigifinexSwapTickerResponse>> GetTickerAsync(string instrumentId, CancellationToken ct = default);
     }
 }

@@ -16,6 +16,7 @@ using CryptoExchange.Net.Sockets.Default;
 using CryptoExchange.Net.Sockets.Interfaces;
 using Digifinex.Net.Clients.MessageHandlers;
 using Digifinex.Net.Interfaces.Clients.SwapApi;
+using Digifinex.Net.Objects.Models;
 using Digifinex.Net.Objects.Models.Socket;
 using Digifinex.Net.Objects.Options;
 using Digifinex.Net.Objects.Sockets;
@@ -146,6 +147,27 @@ namespace Digifinex.Net.Clients.SwapApi
             });
 
             var subscription = new DigifinexSwapTradeSubscription(_logger, instrumentIds, internalHandler);
+            return SubscribeAsync(subscription, ct);
+        }
+
+        /// <inheritdoc />
+        public Task<WebSocketResult<UpdateSubscription>> SubscribeToAllTickerUpdatesAsync(Action<DataEvent<DigifinexSwapTicker[]>> onMessage, CancellationToken ct = default)
+        {
+            var internalHandler = new Action<DateTime, string?, DigifinexSwapTickerUpdateMessage>((receiveTime, originalData, data) =>
+            {
+                var timestamp = data.Data.Length == 0 ? (DateTime?)null : data.Data.Max(static ticker => ticker.GetTimestamp());
+                if (timestamp.HasValue && timestamp.Value != default)
+                    UpdateTimeOffset(timestamp.Value);
+
+                onMessage(
+                    new DataEvent<DigifinexSwapTicker[]>(DigifinexExchange.ExchangeName, data.Data, receiveTime, originalData)
+                        .WithUpdateType(SocketUpdateType.Update)
+                        .WithStreamId(data.Event)
+                        .WithDataTimestamp(timestamp, GetTimeOffset())
+                    );
+            });
+
+            var subscription = new DigifinexSwapAllTickerSubscription(_logger, internalHandler);
             return SubscribeAsync(subscription, ct);
         }
     }

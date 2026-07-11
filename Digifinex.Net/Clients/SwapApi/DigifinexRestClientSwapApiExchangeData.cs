@@ -37,5 +37,17 @@ namespace Digifinex.Net.Clients.SwapApi
             var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "/swap/v2/public/trades", DigifinexExchange.RateLimiter.Rest, 1, false);
             return _baseClient.SendAsync<DigifinexSwapTradesResponse>(request, parameters, ct);
         }
+
+        /// <inheritdoc />
+        public Task<HttpResult<DigifinexSwapTickerResponse>> GetTickerAsync(string instrumentId, CancellationToken ct = default)
+        {
+            var parameters = new Parameters(DigifinexExchange._parameterSerializationSettings)
+            {
+                { "instrument_id", instrumentId }
+            };
+
+            var request = _definitions.GetOrCreate(HttpMethod.Get, _baseClient.BaseAddress, "/swap/v2/public/ticker", DigifinexExchange.RateLimiter.Rest, 1, false);
+            return _baseClient.SendAsync<DigifinexSwapTickerResponse>(request, parameters, ct);
+        }
     }
 }
