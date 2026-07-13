@@ -15,6 +15,12 @@ namespace Digifinex.Net.Objects.Models.Socket
         public string Event { get; set; } = string.Empty;
 
         /// <summary>
+        /// ["<c>full_data</c>"] Whether the message contains the initial full trade snapshot
+        /// </summary>
+        [JsonPropertyName("full_data")]
+        public bool FullData { get; set; }
+
+        /// <summary>
         /// ["<c>data</c>"] Trades
         /// </summary>
         [JsonPropertyName("data")]

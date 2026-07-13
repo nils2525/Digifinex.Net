@@ -140,7 +140,7 @@ namespace Digifinex.Net.Clients.SwapApi
                 var symbol = data.Data.FirstOrDefault()?.InstrumentId;
                 onMessage(
                     new DataEvent<DigifinexSwapTradeUpdateMessage>(DigifinexExchange.ExchangeName, data, receiveTime, originalData)
-                        .WithUpdateType(SocketUpdateType.Update)
+                        .WithUpdateType(data.FullData ? SocketUpdateType.Snapshot : SocketUpdateType.Update)
                         .WithStreamId(data.Event)
                         .WithSymbol(symbol)
                     );
